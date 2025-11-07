@@ -1,0 +1,25 @@
+DAY - 2
+
+| Method     | Contoh Route                                                         | Fungsi / Kegunaan                                                       |
+| :--------- | :------------------------------------------------------------------- | :---------------------------------------------------------------------- |
+| **GET**    | `Route::get('/hewan', [HewanController::class, 'index']);`           | Untuk **menampilkan data / halaman**                                    |
+| **POST**   | `Route::post('/hewan', [HewanController::class, 'store']);`          | Untuk **mengirim data** dari form ke server (misalnya tambah data baru) |
+| **PUT**    | `Route::put('/hewan/{id}', [HewanController::class, 'update']);`     | Untuk **update data** (biasanya dipakai di form edit)                   |
+| **PATCH**  | `Route::patch('/hewan/{id}', [HewanController::class, 'update']);`   | Sama seperti `PUT`, tapi bisa untuk update sebagian data                |
+| **DELETE** | `Route::delete('/hewan/{id}', [HewanController::class, 'destroy']);` | Untuk **menghapus data**                                                |
+| **ANY**    | `Route::any('/hewan', function(){ ... });`                           | Menerima **semua jenis request** (GET, POST, dll)                       |
+| **MATCH**  | `Route::match(['get', 'post'], '/hewan', ...);`                      | Hanya menerima jenis request tertentu yang kita tentukan                |
+
+PENJELASAN RESTfull Route
+Route::resource('hewan', HewanController::class);
+
+| No  | HTTP Method     | URL (URI)          | Controller Method | Nama Route      | Fungsi / Tujuan                                                        |
+| --- | --------------- | ------------------ | ----------------- | --------------- | ---------------------------------------------------------------------- |
+| 1️⃣ | **GET**         | `/hewan`           | `index()`         | `hewan.index`   | Menampilkan semua data hewan                                           |
+| 2️⃣ | **GET**         | `/hewan/create`    | `create()`        | `hewan.create`  | Menampilkan form tambah data                                           |
+| 3️⃣ | **POST**        | `/hewan`           | `store()`         | `hewan.store`   | Menyimpan data baru ke database                                        |
+| 4️⃣ | **GET**         | `/hewan/{id}`      | `show($id)`       | `hewan.show`    | Menampilkan detail satu data (opsional, jarang dipakai di admin panel) |
+| 5️⃣ | **GET**         | `/hewan/{id}/edit` | `edit($id)`       | `hewan.edit`    | Menampilkan form edit data                                             |
+| 6️⃣ | **PUT / PATCH** | `/hewan/{id}`      | `update($id)`     | `hewan.update`  | Memperbarui data lama                                                  |
+| 7️⃣ | **DELETE**      | `/hewan/{id}`      | `destroy($id)`    | `hewan.destroy` | Menghapus data                                                         |
+
