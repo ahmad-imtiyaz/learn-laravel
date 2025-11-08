@@ -23,3 +23,60 @@ Route::resource('hewan', HewanController::class);
 | 6️⃣ | **PUT / PATCH** | `/hewan/{id}`      | `update($id)`     | `hewan.update`  | Memperbarui data lama                                                  |
 | 7️⃣ | **DELETE**      | `/hewan/{id}`      | `destroy($id)`    | `hewan.destroy` | Menghapus data                                                         |
 
+DAY - 3
+
+💡 Topik: Validasi lanjutan & notifikasi error otomatis
+🎯 Tujuan
+
+Menerapkan validasi form pada proses tambah & edit data (create dan update).
+
+Menampilkan pesan error langsung di bawah input agar lebih user-friendly.
+
+Menambahkan aturan validasi lanjutan seperti required, min, dan unique.
+
+🔍 Pokok Pembahasan
+
+Menambahkan Validasi di Controller
+
+Pada method store() dan update(), digunakan $request->validate([...]).
+
+Menentukan aturan seperti:
+
+'nama' => 'required|min:3|unique:hewans,nama,' . $id,
+'jenis' => 'required|min:3',
+
+
+Menambahkan pesan error kustom agar lebih informatif.
+
+Menangani Validasi Error di Blade
+
+Menggunakan directive:
+
+@error('nama')
+    <div class="text-danger">{{ $message }}</div>
+@enderror
+
+
+Ditempatkan langsung di bawah input agar mudah dilihat pengguna.
+
+Membetulkan Typo di Rule
+
+inique → ❌ salah
+
+unique → ✅ benar
+
+Menampilkan Pesan Sukses
+
+Menggunakan session flash:
+
+@if (session('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
+@endif
+
+🧠 Hasil Akhir
+
+✅ Data bisa divalidasi otomatis sebelum disimpan
+✅ Pesan error tampil rapi di bawah input
+✅ Tidak bisa memasukkan data duplikat (nama hewan unik)
+✅ UX lebih baik & kode lebih profesional
+

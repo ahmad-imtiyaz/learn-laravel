@@ -20,13 +20,22 @@ class HewanController extends Controller
 
     public function store(Request $request) // Controller untuk menyimpan data hewan
     {
-        $request->validate([
-            'nama' => 'required|min:3',
-            'jenis' => 'required'
+        // VALIDAASI DATA MASUK
+        $validated = $request->validate([
+            'nama' => 'required|min:3|unique:hewans,nama',
+            'jenis' => 'required|min:3',
+        ], [
+            'nama.required' => 'Nama hewan wajib diisi.',
+            'nama.min' => 'Nama hewan minimal 3 huruf!',
+            'nama.unique' => 'Nama hewan sudah ada!',
+            'jenis.required' => 'Jenis hewan wajib diisi.',
+            'jenis.min' => 'Jenis hewan minimal 3 huruf!',
         ]);
 
-        Hewan::create($request->only('nama', 'jenis'));
-        return redirect()->route('hewan.index')->with('success', 'Data hewan berhasil di tambahkan!');
+        // SIMPAN KE DATABASE
+        \App\Models\Hewan::create($validated);
+
+        return redirect()->route('hewan.index')->with('success', 'Data hewan berhasil ditambahkan!');
     }
 
     public function edit($id) // Controller untuk menampilkan form edit data hewan
@@ -37,12 +46,24 @@ class HewanController extends Controller
 
     public function update(Request $request, $id) // Controller untuk mengupdate data hewan
     {
-        $hewan = Hewan::findOrFail($id);
-        $hewan->update($request->only('nama', 'jenis'));
+        $hewan = \App\Models\Hewan::findOrFail($id);
+
+        // VALIDASI UPDATE (ABAIKAN DATA SENDIRI PADA UNIQUE)
+        $validated = $request->validate([
+            'nama' => 'required|min:3|unique:hewans,nama,' . $id,
+            'jenis' => 'required|min:3',
+        ], [
+            'nama.required' => 'Nama hewan wajib diisi.',
+            'nama.min' => 'Nama hewan minimal 3 huruf!',
+            'nama.unique' => 'Nama hewan sudah ada!',
+            'jenis.required' => 'Jenis hewan wajib diisi.',
+            'jenis.min' => 'Jenis hewan minimal 3 huruf!',
+        ]);
+
+        $hewan->update(($validated));
 
         return redirect()->route('hewan.index')->with('success', 'Data hewan berhasil di update!');
     }
-
     public function destroy($id) // Controller untuk menghapus data hewan
     {
         $hewan = Hewan::findOrFail($id);

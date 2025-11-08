@@ -5,6 +5,13 @@
 </head>
 <body style="font-family: Arial; margin: 40px;">
     <h1>Daftar Hewan</h1>
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
+
 
     @if (session('success'))
         <p style="color: green;">{{ session('success') }}</p>
