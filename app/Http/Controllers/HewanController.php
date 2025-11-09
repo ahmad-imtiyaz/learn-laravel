@@ -7,9 +7,22 @@ use App\Models\Hewan;
 
 class HewanController extends Controller
 {
-    public function index() // Controller untuk menampilkan daftar hewan
+    public function index(Request $request) // Controller untuk menampilkan daftar hewan
     {
-        $datahewan = Hewan::all();
+        $query = Hewan::query();
+
+        // Cek apakah ada input pencarian 
+        if ($request->has('search') && $request->search != '') {
+            $query->where('nama', 'like', '%' . $request->search  . '%')
+                ->orWhere('jenis', 'like', '%' . $request->search . '%');
+        }
+
+        // pagenation tetap jalan (5 data per halaman)  
+        $datahewan = $query->orderBy('id', 'desc')->paginate(5);
+
+        // Biar pagenation tetap membawa query search-nya
+        $datahewan->appends(['search' => $request->search]);
+
         return view('hewan', compact('datahewan'));
     }
 
@@ -33,7 +46,7 @@ class HewanController extends Controller
         ]);
 
         // SIMPAN KE DATABASE
-        \App\Models\Hewan::create($validated);
+        Hewan::create($validated);
 
         return redirect()->route('hewan.index')->with('success', 'Data hewan berhasil ditambahkan!');
     }
@@ -46,7 +59,7 @@ class HewanController extends Controller
 
     public function update(Request $request, $id) // Controller untuk mengupdate data hewan
     {
-        $hewan = \App\Models\Hewan::findOrFail($id);
+        $hewan = Hewan::findOrFail($id);
 
         // VALIDASI UPDATE (ABAIKAN DATA SENDIRI PADA UNIQUE)
         $validated = $request->validate([

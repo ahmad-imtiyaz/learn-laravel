@@ -80,3 +80,8 @@ Menggunakan session flash:
 ✅ Tidak bisa memasukkan data duplikat (nama hewan unik)
 ✅ UX lebih baik & kode lebih profesional
 
+DAY - 4
+
+Hari ini kita telah menambahkan fitur pencarian (search bar) yang bekerja secara real-time (AJAX) tanpa perlu menekan tombol “Cari”. Data tabel dan pagination kini dimuat dinamis menggunakan AJAX + debounce function, sehingga lebih interaktif dan efisien. Selain itu, struktur tampilan juga dioptimalkan dengan memisahkan partial view (hewan/table.blade.php) agar kode lebih rapi dan mudah dikelola.
+
+DAY - 5
