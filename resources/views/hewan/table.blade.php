@@ -1,8 +1,9 @@
 {{-- resources/views/hewan/table.blade.php --}}
-<table class="table table-bordered table-striped text-center">
+<table class="table table-bordered table-striped text-center align-middle">
     <thead class="table-dark">
         <tr>
             <th>ID</th>
+            <th>Foto</th> {{-- ✅ Tambahkan kolom Foto --}}
             <th>Nama</th>
             <th>Jenis</th>
             <th>Aksi</th>
@@ -11,12 +12,22 @@
     <tbody>
     @if($datahewan->isEmpty())
         <tr>
-            <td colspan="4">Belum ada data hewan.</td>
+            <td colspan="5">Belum ada data hewan.</td>
         </tr>
     @else
         @foreach ($datahewan as $dh)
         <tr>
             <td>{{ $dh->id }}</td>
+
+            {{-- ✅ Tampilkan foto jika ada, jika tidak tampilkan placeholder --}}
+            <td>
+                @if($dh->foto)
+                    <img src="{{ asset('storage/' . $dh->foto) }}" alt="{{ $dh->nama }}" width="80" height="80" style="object-fit: cover; border-radius: 8px;">
+                @else
+                    <span class="text-muted">Tidak ada foto</span>
+                @endif
+            </td>
+
             <td>{{ $dh->nama }}</td>
             <td>{{ $dh->jenis }}</td>
             <td>

@@ -85,3 +85,9 @@ DAY - 4
 Hari ini kita telah menambahkan fitur pencarian (search bar) yang bekerja secara real-time (AJAX) tanpa perlu menekan tombol “Cari”. Data tabel dan pagination kini dimuat dinamis menggunakan AJAX + debounce function, sehingga lebih interaktif dan efisien. Selain itu, struktur tampilan juga dioptimalkan dengan memisahkan partial view (hewan/table.blade.php) agar kode lebih rapi dan mudah dikelola.
 
 DAY - 5
+
+1.Memperbaiki form create.blade.php agar mendukung upload gambar (enctype="multipart/form-data").
+2.Mengubah input foto menjadi type="file" dan menambahkan event JavaScript onchange="previewImage(event)".
+3.Menambahkan fitur preview gambar otomatis sebelum disimpan menggunakan FileReader().
+4.Mengecek bahwa gambar tampil dengan rapi dan tidak error di browser.
+5.Semua fitur upload, preview, dan validasi telah berjalan dengan baik.

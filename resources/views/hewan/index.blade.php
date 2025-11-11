@@ -22,6 +22,7 @@
     <table border="1" cellpadding="10" style="margin-top: 10px;">
         <tr>
             <th>ID</th>
+            <th>Foto</th>
             <th>Nama Hewan</th>
             <th>Jenis</th>
             <th>Aksi</th>
@@ -29,6 +30,12 @@
         @foreach ($dataHewan as $DH)
         <tr>
             <td>{{ $DH->id }}</td>
+            <td>
+                @if ($DH->foto)
+                <img src="{{  asset('storage/' . $DH->foto) }}" alt="Foto" {{ $DH->nama }} width="80" height="80" style="object-fit: cover; border-radius: 8px;" >
+                    
+                @endif
+            </td>
             <td>{{ $DH->nama }}</td>
             <td>{{ $DH->jenis }}</td>
             <td>

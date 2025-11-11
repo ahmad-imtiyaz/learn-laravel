@@ -23,7 +23,7 @@
         <form id="search-form" class="d-flex" method="GET" action="{{ route('hewan.index') }}">
             <input id="search" name="search" value="{{ request('search') }}" 
                    class="form-control me-2" type="search" placeholder="Cari hewan..." aria-label="Search">
-            <button id="search-btn" class="btn btn-primary" type="submit">Cari</button>
+            {{-- <button id="search-btn" class="btn btn-primary" type="submit">Cari</button> --}}
         </form>
     </div>
 

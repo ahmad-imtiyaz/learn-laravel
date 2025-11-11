@@ -11,5 +11,6 @@ class Hewan extends Model
     protected $fillable = [
         'nama',
         'jenis',
+        'foto',
     ];
 }

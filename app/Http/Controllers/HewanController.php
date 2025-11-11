@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Hewan;
+use Illuminate\Support\Facades\Storage;
+
 
 class HewanController extends Controller
 {
@@ -37,6 +39,7 @@ class HewanController extends Controller
         $validated = $request->validate([
             'nama' => 'required|min:3|unique:hewans,nama',
             'jenis' => 'required|min:3',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ], [
             'nama.required' => 'Nama hewan wajib diisi.',
             'nama.min' => 'Nama hewan minimal 3 huruf!',
@@ -45,6 +48,12 @@ class HewanController extends Controller
             'jenis.min' => 'Jenis hewan minimal 3 huruf!',
         ]);
 
+        // Jika ada fota simpan ke storage 
+        if ($request->hasFile('foto')) {
+            // Simpan di folder storage/app/public/hewan
+            $path = $request->file('foto')->store('hewan', 'public');
+            $validated['foto'] = $path; // simpan path-nya ke array validated
+        }
         // SIMPAN KE DATABASE
         Hewan::create($validated);
 
@@ -65,23 +74,47 @@ class HewanController extends Controller
         $validated = $request->validate([
             'nama' => 'required|min:3|unique:hewans,nama,' . $id,
             'jenis' => 'required|min:3',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ], [
             'nama.required' => 'Nama hewan wajib diisi.',
             'nama.min' => 'Nama hewan minimal 3 huruf!',
             'nama.unique' => 'Nama hewan sudah ada!',
             'jenis.required' => 'Jenis hewan wajib diisi.',
             'jenis.min' => 'Jenis hewan minimal 3 huruf!',
+            'foto.image' => 'File harus berupa gambar!',
+            'foto.mimes' => 'Format gambar harus jpeg, png, jpg, gif svg!',
         ]);
 
-        $hewan->update(($validated));
+        // Upload foto baru jika ada
+        if ($request->hasFile('foto')) {
+            // Hapus foto lama jika ada
+            if ($hewan->foto && Storage::disk('public')->exists($hewan->foto)) {
+                Storage::delete('public/' . $hewan->foto);
+            }
 
-        return redirect()->route('hewan.index')->with('success', 'Data hewan berhasil di update!');
+            // Simpan foto baru
+            $path = $request->file('foto')->store('hewan', 'public');
+            $validated['foto'] = $path; // simpan path-nya ke array validated
+        }
+
+        // Update data ke database
+        $hewan->update($validated);
+
+        return redirect()->route('hewan.index')->with('success', 'Data hewan berhasil diupdate!');
     }
-    public function destroy($id) // Controller untuk menghapus data hewan
+
+    public function destroy($id)
     {
         $hewan = Hewan::findOrFail($id);
+
+        // cek dan hapus foto lama jika ada
+        if ($hewan->foto && Storage::exists('public/' . $hewan->foto)) {
+            Storage::delete('public/' . $hewan->foto);
+        }
+
+        // hapus data dari database
         $hewan->delete();
 
-        return redirect()->route('hewan.index')->with('success', 'Data hewan berhasil di hapus!');
+        return redirect()->route('hewan.index')->with('success', 'Data hewan berhasil dihapus!');
     }
 }
