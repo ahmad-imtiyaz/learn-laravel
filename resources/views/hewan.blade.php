@@ -6,6 +6,16 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+  <a class="navbar-brand" href="#">Manajemen Hewan</a>
+  <div class="ms-auto">
+      <form action="{{ route('logout') }}" method="POST" class="d-inline">
+          @csrf
+          <button type="submit" class="btn btn-danger btn-sm">Logout</button>
+      </form>
+  </div>
+</nav>
+
 <div class="container py-5">
     <h1 class="mb-4 text-center">Daftar Hewan</h1>
 

@@ -91,3 +91,12 @@ DAY - 5
 3.Menambahkan fitur preview gambar otomatis sebelum disimpan menggunakan FileReader().
 4.Mengecek bahwa gambar tampil dengan rapi dan tidak error di browser.
 5.Semua fitur upload, preview, dan validasi telah berjalan dengan baik.
+
+DAY - 6
+
+Hari ini telah berhasil menambahkan sistem autentikasi dasar pada proyek Laravel,
+termasuk proses login, proteksi halaman CRUD dengan middleware auth, 
+serta fungsi logout yang terintegrasi pada tampilan utama. 
+Pengguna yang belum login kini diarahkan otomatis ke halaman 
+login sebelum dapat mengakses data hewan. Selain itu, 
+layout utama juga diperbaiki agar tombol Logout tampil rapi di bagian atas halaman.
