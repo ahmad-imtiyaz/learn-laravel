@@ -100,3 +100,8 @@ serta fungsi logout yang terintegrasi pada tampilan utama.
 Pengguna yang belum login kini diarahkan otomatis ke halaman 
 login sebelum dapat mengakses data hewan. Selain itu, 
 layout utama juga diperbaiki agar tombol Logout tampil rapi di bagian atas halaman.
+
+DAY - 7 
+
+#Penting "--resource"
+php artisan make:controller UserController --resource

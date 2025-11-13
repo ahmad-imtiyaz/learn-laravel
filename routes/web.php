@@ -1,27 +1,40 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\HewanController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 
-Route::get('/', [HewanController::class, 'index'])->name('hewan.index');
-// Route::get('/hewan/tambah', [HewanController::class, 'create'])->name('hewan.create');
-// Route::post('/hewan/simpan', [HewanController::class, 'store'])->name('hewan.store');
-// Route::get('/hewan/edit/{id}', [HewanController::class, 'edit'])->name('hewan.edit');
-// Route::post('/hewan/update/{id}', [HewanController::class, 'update'])->name('hewan.update');
-// Route::delete('/hewan/hapus/{id}', [HewanController::class, 'destroy'])->name('hewan.destroy');
+// Route::get('/', [HewanController::class, 'index'])->name('hewan.index');
+Route::get('/', fn() => redirect()->route('login'));
 
 // 🔒 Route Login
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// 🐾 Proteksi CRUD hewan pakai middleware auth
+// Halaman User
 Route::middleware('auth')->group(function () {
-    Route::resource('hewan', HewanController::class);
+    Route::view('/akun', 'akun.index')->name('akun');
+    Route::resource('hewan', HewanController::class)->only(['index']);
 });
 
-// Redirect awal ke login
-Route::get('/', function () {
-    return redirect('/login');
+// halaman admin
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::resource('users', UserController::class); //manajemen user
+    Route::resource('hewan', HewanController::class)->except(['index']); //CRUD hewan)
 });
+
+// akun dan password
+Route::post('/akun/update-password', function (Request $request) {
+    $request->validate([
+        'password' => 'required|confirmed|min:5',
+    ]);
+
+    $user = Auth::user();
+    $user->password = Hash::make($request->password);
+    $user->save();
+
+    return back()->with('success', 'Password berhasil diubah!');
+})->name('akun.updatePassword')->middleware('auth');

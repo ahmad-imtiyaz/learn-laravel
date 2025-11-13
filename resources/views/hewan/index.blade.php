@@ -1,49 +1,55 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Daftar Hewan</title>
-</head>
-<body style="font-family: Arial; margin: 40px;">
-    <h1>Daftar Hewan</h1>
-    @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
+@extends('layouts.app')
+
+@section('title', 'Daftar Hewan')
+
+@section('content')
+<h2>🐾 Daftar Hewan</h2>
+
+@if(session('success'))
+<div class="alert alert-success">{{ session('success') }}</div>
 @endif
 
+@if(Auth::user()->role === 'admin')
+    <a href="{{ route('hewan.create') }}" class="btn btn-primary mb-3">+ Tambah Hewan Baru</a>
+@endif
 
-    @if (session('success'))
-        <p style="color: green;">{{ session('success') }}</p>
-    @endif
-
-    <a href="{{ route('hewan.create') }}">+ Tambah Hewan Baru</a>
-
-    <table border="1" cellpadding="10" style="margin-top: 10px;">
+<table class="table table-bordered">
+    <thead class="table-dark">
         <tr>
             <th>ID</th>
             <th>Foto</th>
             <th>Nama Hewan</th>
             <th>Jenis</th>
-            <th>Aksi</th>
+            @if(Auth::user()->role === 'admin')
+                <th>Aksi</th>
+            @endif
         </tr>
+    </thead>
+    <tbody>
         @foreach ($dataHewan as $DH)
         <tr>
             <td>{{ $DH->id }}</td>
             <td>
                 @if ($DH->foto)
-                <img src="{{  asset('storage/' . $DH->foto) }}" alt="Foto" {{ $DH->nama }} width="80" height="80" style="object-fit: cover; border-radius: 8px;" >
-                    
+                    <img src="{{ asset('storage/' . $DH->foto) }}" width="80" height="80" style="object-fit: cover; border-radius: 8px;">
                 @endif
             </td>
             <td>{{ $DH->nama }}</td>
             <td>{{ $DH->jenis }}</td>
+            @if(Auth::user()->role === 'admin')
             <td>
-                <a href="{{ route('hewan.edit', $DH->id) }}">Edit</a> |
-                <a href="{{ route('hewan.destroy', $DH->id) }}" onclick="return confirm('Yakin mau hapus?')">Hapus</a>
+                <a href="{{ route('hewan.edit', $DH->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                <form action="{{ route('hewan.destroy', $DH->id) }}" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button onclick="return confirm('Yakin mau hapus?')" class="btn btn-danger btn-sm">Hapus</button>
+                </form>
             </td>
+            @endif
         </tr>
         @endforeach
-    </table>
-</body>
-</html>
+    </tbody>
+</table>
+
+{{ $dataHewan->links() }}
+@endsection
