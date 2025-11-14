@@ -21,11 +21,12 @@
 <div class="sidebar">
     <h4>Menu</h4>
     @if(Auth::user()->role === 'admin')
-        <a href="{{ route('users.index') }}">👑 Kelola User</a>
-        <a href="{{ route('hewan.index') }}">🐾 Data Hewan</a>
-    @else
-        <a href="{{ route('hewan.index') }}">🐾 Lihat Hewan</a>
-    @endif
+    <a href="{{ route('users.index') }}">👑 Kelola User</a>
+    <a href="{{ route('hewan-admin.index') }}">🐾 Kelola Hewan</a>
+@else
+    <a href="{{ route('hewan.index') }}">🐾 Lihat Hewan</a>
+@endif
+
     <a href="{{ route('akun') }}">⚙️ Akun Saya</a>
 
     <form action="{{ route('logout') }}" method="POST" class="mt-3">

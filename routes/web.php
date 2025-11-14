@@ -2,39 +2,49 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use App\Http\Controllers\HewanController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 
-// Route::get('/', [HewanController::class, 'index'])->name('hewan.index');
 Route::get('/', fn() => redirect()->route('login'));
 
-// 🔒 Route Login
+// Login
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Halaman User
+
+// ================== USER ======================
 Route::middleware('auth')->group(function () {
-    Route::view('/akun', 'akun.index')->name('akun');
-    Route::resource('hewan', HewanController::class)->only(['index']);
+
+    Route::get('/akun', fn() => view('akun.index'))->name('akun');
+
+    // User hanya boleh LIHAT daftar hewan
+    Route::get('/hewan', [HewanController::class, 'userIndex'])
+        ->name('hewan.index');
 });
 
-// halaman admin
+
+// ================== ADMIN ======================
+Route::middleware('auth')->group(function () {
+
+    Route::get('/akun', fn() => view('akun.index'))->name('akun');
+
+    Route::get('/hewan', [HewanController::class, 'userIndex'])
+        ->name('hewan.index');
+});
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::resource('users', UserController::class); //manajemen user
-    Route::resource('hewan', HewanController::class)->except(['index']); //CRUD hewan)
+
+    // Kelola User
+    Route::resource('users', UserController::class);
+
+    // CRUD Hewan
+    Route::get('/admin/hewan', [HewanController::class, 'adminIndex'])->name('admin.hewan.index');
+    Route::get('/admin/hewan/create', [HewanController::class, 'create'])->name('admin.hewan.create');
+    Route::post('/admin/hewan', [HewanController::class, 'store'])->name('admin.hewan.store');
+    Route::get('/admin/hewan/{id}/edit', [HewanController::class, 'edit'])->name('admin.hewan.edit');
+    Route::put('/admin/hewan/{id}', [HewanController::class, 'update'])->name('admin.hewan.update');
+    Route::delete('/admin/hewan/{id}', [HewanController::class, 'destroy'])->name('admin.hewan.destroy');
 });
-
-// akun dan password
-Route::post('/akun/update-password', function (Request $request) {
-    $request->validate([
-        'password' => 'required|confirmed|min:5',
-    ]);
-
-    $user = Auth::user();
-    $user->password = Hash::make($request->password);
-    $user->save();
-
-    return back()->with('success', 'Password berhasil diubah!');
-})->name('akun.updatePassword')->middleware('auth');
